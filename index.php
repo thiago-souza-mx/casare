@@ -26,7 +26,7 @@ $res = explode('<section id="gift-lists">',$no_video);
 $res2 = explode('</section>',$res[1],2);
 $no_lista = $res[0].$res2[1];
 
-$html = $no_lista;
+$html = str_replace('/convites/thaisandrafa/check','https://www.casare.me/convites/thaisandrafa/check',$no_lista);
 
 curl_close($ch);
 
