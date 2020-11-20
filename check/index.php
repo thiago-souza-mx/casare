@@ -46,7 +46,7 @@ if(isset($_GET['action'])){
         if(trim( strtolower($k)) == trim($nome))
             $check = $k;
     }
-    if($check){
+    if($check != false){
         if(isset($_POST['confirm'])){
             $confirm = $json[$check]['status'] = "confirmou";
             $link = $json[$check]['sim'];
@@ -77,9 +77,11 @@ if(isset($_GET['action'])){
 
     $_SESSION['name'] = $check;
     $_SESSION['status'] = $json[$check]['status']; 
+    
 
     if($confirm != false){
-        
+        print_r($_SESSION);
+        print_r($link);
             
         $ch = curl_init($link);
 
