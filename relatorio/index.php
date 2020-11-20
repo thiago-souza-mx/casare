@@ -271,11 +271,12 @@ section{
                         <td><?php echo $message['msg']; ?></td>
                         <td><?php echo $message['status']; ?></td>                    
                         <td>
-                        
-                            <button type='button' class='btn btn-danger' style='float: right;' onclick="request('<?php echo $root.'/guest_messages/?action=remove&id='.$id; ?>')">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-
+                            <?php if( $message['status'] > 0 ){ ?>
+                                <button type='button' class='btn btn-danger' style='float: right;' onclick="request('<?php echo $root.'/guest_messages/?action=remove&id='.$id; ?>')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            <?php } ?>
+                            
                             <button type='button' class='btn btn-success' style='float: right;' onclick="request('<?php echo $root.'/guest_messages/?action=aproval&id='.$id.'&status=1'; ?>')">
                                 <i class="fas fa-check"></i>
                             </button>
