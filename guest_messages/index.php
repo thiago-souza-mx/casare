@@ -33,9 +33,9 @@ if(isset($_GET)){
         }
 
         $json[] = $data; 
-        file_put_contents( "messages.json" , json_encode($data ) );
+        file_put_contents( "messages.json" , json_encode($json ) );
         
-        print_r($data);
+        //print_r($data);
         $success = true;
     }
 }
