@@ -42,6 +42,8 @@ if(isset($_GET['action'])){
     $resp = curl_exec($ch);
     curl_close($ch);
 
+    //print_r($_GET);
+
     header("Location:/ok");
 }else{
     $nome = strtolower($_GET['name']);
@@ -99,6 +101,7 @@ if(isset($_GET['action'])){
             $resp = str_replace('<title>Casare</title>','<title>Thais & Thiago</title>',$resp);
             $resp = str_replace('href="/convites/','href="/check?action=sozinho&',$resp);
             $resp = str_replace('method="post"','method="get"',$resp);
+            $resp = str_replace('</form>','<input type="hidden" name="action" value="convidados"></form>',$resp);
         print_r($resp);
      
         ?>
