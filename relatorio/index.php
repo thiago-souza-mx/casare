@@ -36,7 +36,7 @@ $messages = json_decode($messages, true);
 
 ?>
 <head>
-  <meta http-equiv="refresh" content="">
+  <meta http-equiv="refresh" content="30">
   <title>Relatório de convidados</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -271,15 +271,16 @@ section{
                         <td><?php echo $message['msg']; ?></td>
                         <td><?php echo $message['status']; ?></td>                    
                         <td>
-                            <?php if( $message['status'] > 0 ){ ?>
-                                <button type='button' class='btn btn-danger' style='float: right;' onclick="request('<?php echo $root.'/guest_messages/?action=remove&id='.$id; ?>')">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            <?php } ?>
                             
-                            <button type='button' class='btn btn-success' style='float: right;' onclick="request('<?php echo $root.'/guest_messages/?action=aproval&id='.$id.'&status=1'; ?>')">
-                                <i class="fas fa-check"></i>
+                            <button type='button' class='btn btn-danger' style='float: right;' onclick="request('<?php echo $root.'/guest_messages/?action=remove&id='.$id; ?>')">
+                                <i class="fas fa-trash-alt"></i>
                             </button>
+
+                            <?php if( $message['status'] > 0 ){ ?>
+                                <button type='button' class='btn btn-success' style='float: right;' onclick="request('<?php echo $root.'/guest_messages/?action=aproval&id='.$id.'&status=1'; ?>')">
+                                    <i class="fas fa-check"></i>
+                                </button>                                
+                            <?php } ?>
 
                         </td>                    
                     </tr>   
