@@ -16,9 +16,12 @@ curl_close($ch);
 $json = json_decode($resp, true);
 
 if(isset($_GET['action'])){
+    echo "action";
     if($_GET['action'] == "convidados"){
+        echo "convidados";
         $json[$_SESSION['name']]['companions_attributes'] = $_POST['guest']['companions_attributes'];
     }elseif($_GET['action'] == "sozinho"){
+        echo "sozinho";
         if($json[$_SESSION['name']]['companions_attributes'])
             unset( $json[$_SESSION['name']]['companions_attributes']);
     }
@@ -35,9 +38,11 @@ if(isset($_GET['action'])){
 
     $resp = curl_exec($ch);
     curl_close($ch);
+    print_r($resp);
 
     header("Location:/ok");
 }else{
+    print_r($_POST);
     $nome = strtolower($_POST['name']);
     $check = false;
     $confirm = false;
