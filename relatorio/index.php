@@ -333,7 +333,7 @@ section{
     function request(url){
         fetch(url).then(res=>{            
             res.json().then(res=>{
-                if(res.error == "200")
+                if(res.status == "200")
                     location.reload();
                 else
                     console.log(res);
