@@ -115,7 +115,7 @@ $json = json_decode($resp, true);
                                                 {$item['name']} 
                                             </li>
                                             <li>
-                                                <b>Email:</b>
+                                                <b>".( $item['kind'] == 'adult' ? 'Email' : 'Idade')."</b>
                                                 {$item['email']} 
                                             </li>
         

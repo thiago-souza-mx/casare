@@ -109,6 +109,18 @@ if(isset($_GET['action'])){
         <script>
             let form = document.getElementById('guestForm').querySelector('form');
             form.action = '/check?action=convidados';
+
+            document.querySelectorAll('form input[value=child]').forEach(item=>{
+                let child = item.parentNode;
+                child.querySelector('label').innerText = 'Idade da criança';
+                let placeholder =child.querySelector('input[placeholder="exemplo@exemplo.com.br"]')
+                if(placeholder){
+                    placeholder.setAttribute('placeholder','Idade de 0 a 12')
+                    placeholder.setAttribute('type','number')
+                    placeholder.setAttribute('min','0')
+                    placeholder.setAttribute('max','12')
+                }
+            })
         </script>
 
         <?php
