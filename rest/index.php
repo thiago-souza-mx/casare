@@ -11,6 +11,6 @@ if(isset($_POST['body']) && !empty($_POST['body'])){
 
 file_put_contents("rest.json", $data );
 
-print_r( file_get_contents( "rest.json?" ) ); 
+print_r( file_get_contents( "rest.json" ) ); 
 
 //print_r($data);
