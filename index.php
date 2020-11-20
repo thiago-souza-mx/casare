@@ -1,27 +1,27 @@
 <?php
 
-$ch = curl_init('https://www.casare.me/thaisandrafa');
 
-curl_setopt_array($ch, [
 
-    // Equivalente ao -X:
-    CURLOPT_CUSTOMREQUEST => 'GET',
+function Request($url){
 
-    // Equivalente ao -H:
-    CURLOPT_HTTPHEADER => [
-        'JsonOdds-API-Key: yourapikey'
-    ],
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
 
-    // Permite obter o resultado
-    CURLOPT_RETURNTRANSFER => 1,
-]);
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_RETURNTRANSFER => 1,
+    ]);
+
+    $resp = curl_exec($ch);
+    curl_close($ch);
+    return $resp;
+}
 
 $name = false;
 if(isset($_GET['n'])){
     $name = $_GET['n'];
 }
 
-$resp = curl_exec($ch);
+$resp = Request('https://www.casare.me/thaisandrafa');
 
 $search = '<div class="row margin-top-10"><div class="col-xs-12 col-md-8 col-md-offset-2"><p class="text-danger hidden" id="rsvp-captcha-message">Não se esqueça de marcar a verificação abaixo!</p><div id="rsvp-recaptcha"></div></div></div>';
 $search1 = '<div class="row"><div class="col-md-12"><br><p class="text-danger hidden" id="messages-captcha-message">Não se esqueça de marcar a verificação abaixo!</p><div id="messages-recaptcha"></div></div></div>';
@@ -49,7 +49,7 @@ $html = str_replace('/convites/thaisandrafa/check','/check',$no_phone);
 $html = str_replace('disabled="disabled"','',$html);
 $html = str_replace('method="post"','method="get"',$html);
 
-curl_close($ch);
+
 
 print_r( $html);
 
@@ -88,6 +88,8 @@ print_r( $html);
     function setMessages( object ){
         if(!object)
             return ;
+        
+        object = JSON.parse(object);
         let arrayMsg = "";
         let divider = `
             <div class="col-xs-12 col-md-4 col-md-offset-4 text-center" style="float:none;"><img alt="About section footer" class="about-footer img-responsive center-block" data-retina="https://assets3.casare.me/assets/wedding/classic/champagne_blue/about-section-footer@2x-d4480dfa294c40ac3b05367b031f3b08.png" src="https://assets3.casare.me/assets/wedding/classic/champagne_blue/about-section-footer-293437c969d731ccbc631b73ce5c4c80.png"></div>
@@ -99,7 +101,7 @@ print_r( $html);
                     <div class="row">
                         <div class="col-xs-10 col-xs-offset-1 text-center">
                             <p class="lato-light-italic" data-anchor="guest-messages-section" data-behavior="view_more" data-button-class="text-center center-block text-lg pathway-font uppercase" data-max-height="120" style="height: auto; overflow: visible;">
-                            ${listMsg.msg}
+                            ${list.msg}
                             </p>
                             <h3>${list.name}</h3><span class="lato-light">${list.date}</span></div>
                     </div>
@@ -133,7 +135,7 @@ print_r( $html);
         document.getElementById('guest-messages').querySelector('.container').appendChild(container);
     };
 
-    setMessages();
+    setMessages('<?php echo Request('http://casamento.thaisethiago.tk/guest_messages/messages.json'); ?>');
 
 
     <?php if($name){
