@@ -98,6 +98,7 @@ if(isset($_GET['action'])){
         curl_close($ch);
             $resp = str_replace('<title>Casare</title>','<title>Thais & Thiago</title>',$resp);
             $resp = str_replace('href="/convites/','href="/check?action=sozinho&',$resp);
+            $resp = str_replace('method="post"','method="get"',$resp);
         print_r($resp);
      
         ?>
