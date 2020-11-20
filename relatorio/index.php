@@ -2,6 +2,7 @@
 session_start();
 
 //print_r($_SESSION);
+//$root = 'http://casamento.thaisethiago.tk/';
 $root = 'http://'.$_SERVER['HTTP_HOST'];
 
 $soma = [
@@ -66,6 +67,7 @@ $json = json_decode($resp, true);
                         <th>
                             Acompanhantes
                         </th>
+                        <th>URL</th>
                         <th>
                         </th>
 					</tr>
@@ -83,7 +85,10 @@ $json = json_decode($resp, true);
 							if(isset($v['status']) ){
                                 if($v['status'] == "confirmou"){
                                     $class = "table-success";
-                                    $count['adult'] += 1;
+                                    if(strrpos(strtolower($k), " e ") !== false )
+                                        $count['adult'] += 2;
+                                    else
+                                        $count['adult'] += 1;
                                     if(isset($v['companions_attributes'])){
                                         $add = $v['companions_attributes'];
                                     }
@@ -135,6 +140,9 @@ $json = json_decode($resp, true);
                             <b><?php echo empty($adult.$child) ? 'N/A' : $adult.' '.$child; ?> </b>
                         </td>
                         <td>
+                            <input type="text" value="http://casamento.thaisethiago.tk/?n=<?php echo urlencode($k); ?>#rsvp">
+                        </td>
+                        <td>
                             <?php echo $add != false ? 
                                 "<button type='button' class='btn btn-info' style='float: right;' onclick=\"expand('target_{$id}',this)\">
                                     Exibir Acompanhantes
@@ -144,7 +152,7 @@ $json = json_decode($resp, true);
                         </td>
 					</tr>
                     <tr>
-                        <td colspan="3" <?php echo $add != false ? "id='target_{$id}'" : ''  ; ?> style="display:none;     background: #dff2ff;" >
+                        <td colspan="5" <?php echo $add != false ? "id='target_{$id}'" : ''  ; ?> style="display:none;     background: #dff2ff;" >
                             <div> 
 
                                 <b>Acompanhantes: Total de <?php echo $total." sendo ".$adult.' '.$child; ?> </b>
@@ -170,7 +178,7 @@ $json = json_decode($resp, true);
 <div class="total">
     <h2><b>CONFIRMADOS:</b> <b><?php echo $soma['adult']; ?></b> adultos e <b><?php echo $soma['child']; ?></b> crianças 
     <span style=" margin-left:20px;"><b>TOTAL: <?php echo $soma['child']+$soma['adult']; ?></b></span>
-    <span style=" margin-left:20px;"><b>CONVITE: <?php echo count($json); ?></b> convidados</span>
+    <span style=" margin-left:20px;"><b>CONVITES: <?php echo count($json); ?></b> convidados</span>
     </h2>
 </div>
 
