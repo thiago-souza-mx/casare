@@ -8,12 +8,14 @@ if(isset($_GET)){
     if(isset($_GET['action']) && $_GET['action'] == "aproval"){
 
         $json =  file_get_contents( "messages.json" );
+        $json = json_decode( $json, true );
 
         $json[$_GET['id']]['aproval'] = $_GET['status']; 
         file_put_contents( "messages.json" , json_encode($json ) );
     }elseif(isset($_GET['action']) && $_GET['action'] == "remove"){
 
         $json =  file_get_contents( "messages.json" );
+        $json = json_decode( $json, true );
 
         unset($json[$_GET['id']]);
         file_put_contents( "messages.json" , json_encode($json ) );
