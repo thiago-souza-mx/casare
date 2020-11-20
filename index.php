@@ -1,6 +1,12 @@
 <?php
 
+$root = 'http://casamento.thaisethiago.tk/';
+if(isset($_SERVER["AMBIENTE"]) && $_SERVER["AMBIENTE"] == "PODUCAO")
+    $root = 'http://'.$_SERVER['HTTP_HOST'];
 
+$app = 'thaisandrafa';
+if(isset($_SERVER["AMBIENTE"]) && $_SERVER["AMBIENTE"] == "PODUCAO")
+    $app = $_SERVER['APP_NAME'];
 
 function Request($url){
 
@@ -21,7 +27,7 @@ if(isset($_GET['n'])){
     $name = $_GET['n'];
 }
 
-$resp = Request('https://www.casare.me/thaisandrafa');
+$resp = Request('https://www.casare.me/'.$app);
 
 $search = '<div class="row margin-top-10"><div class="col-xs-12 col-md-8 col-md-offset-2"><p class="text-danger hidden" id="rsvp-captcha-message">Não se esqueça de marcar a verificação abaixo!</p><div id="rsvp-recaptcha"></div></div></div>';
 $search1 = '<div class="row"><div class="col-md-12"><br><p class="text-danger hidden" id="messages-captcha-message">Não se esqueça de marcar a verificação abaixo!</p><div id="messages-recaptcha"></div></div></div>';
@@ -96,7 +102,7 @@ print_r( $html);
         `;
         let n = 0;
         object.forEach(list=>{
-            if(!!list.aproval){
+            if(!!list.status){
                 arrayMsg += `
                     <div class="message-item">
                         <div class="row">
@@ -133,11 +139,11 @@ print_r( $html);
         let container = document.createElement('div');
         container.setAttribute('class','row');
         container.innerHTML = html;
-        
+        if(!!n)
         document.getElementById('guest-messages').querySelector('.container').appendChild(container);
     };
 
-    setMessages('<?php echo Request('http://casamento.thaisethiago.tk/guest_messages/messages.json'); ?>');
+    setMessages('<?php echo Request($root.'/guest_messages/messages.json'); ?>');
 
 
     <?php if($name){

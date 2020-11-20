@@ -11,6 +11,12 @@ if(isset($_GET)){
 
         $json[$_GET['id']]['aproval'] = $_GET['status']; 
         file_put_contents( "messages.json" , json_encode($json ) );
+    }elseif(isset($_GET['action']) && $_GET['action'] == "remove"){
+
+        $json =  file_get_contents( "messages.json" );
+
+        unset($json[$_GET['id']]);
+        file_put_contents( "messages.json" , json_encode($json ) );
 
     }else{
         $submit = $_GET['guest_message'];
@@ -30,7 +36,7 @@ if(isset($_GET)){
                 "name" => $name,
                 "date" => $date,
                 "time" => date("h:i:s"),
-                "aproval" => 0
+                "status" => 0
             );
             
             $json =  file_get_contents( "messages.json" );

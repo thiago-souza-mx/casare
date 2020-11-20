@@ -1,38 +1,47 @@
 <?php
 session_start();
 
-//print_r($_SESSION);
-$root = 'http://casamento.thaisethiago.tk/';
+$root = 'http://casamento.thaisethiago.tk';
 if(isset($_SERVER["AMBIENTE"]) && $_SERVER["AMBIENTE"] == "PODUCAO")
     $root = 'http://'.$_SERVER['HTTP_HOST'];
 if(isset($_GET['server']))
     print_r($_SERVER);
 $soma = [
     "adult" => 0,
-    "child" => 0
+    "child" => 0,
+    "aproved" => 0,
+    "new" => 0
 ];
 $id= 0;
-$ch = curl_init($root.'/rest/rest.json?'.uniqid());
 
-curl_setopt_array($ch, [
+function Request($url){
 
-    CURLOPT_CUSTOMREQUEST => 'GET',
-    CURLOPT_RETURNTRANSFER => 1,
-    
-]);
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
 
-$resp = curl_exec($ch);
-curl_close($ch);
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_RETURNTRANSFER => 1,
+    ]);
 
-$json = json_decode($resp, true);
+    $resp = curl_exec($ch);
+    curl_close($ch);
+    return $resp;
+}
+
+$json = Request($root.'/rest/rest.json?'.uniqid());
+$json = json_decode($json, true);
+
+$messages = Request($root.'/guest_messages/messages.json?'.uniqid());
+$messages = json_decode($messages, true);
 
 ?>
 <head>
-  <meta http-equiv="refresh" content="30">
+  <meta http-equiv="refresh" content="">
   <title>Relatório de convidados</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+<script src="https://kit.fontawesome.com/eb50c7c190.js" crossorigin="anonymous"></script>
 <style>
 .total {
     color: white;
@@ -50,9 +59,41 @@ $json = json_decode($resp, true);
 .total h2 b{
     font-weight: 600;
 }
+.menu-lateral{
+    position: fixed;
+    right: -100px;
+    top: 150px;
+    transform: rotate(-90deg);
+}
+.menu-lateral ul{
+    display:flex;
+    list-style:none;
+    padding:0;
+}
+.menu-lateral ul li {
+    border-radius: 20px 20px 0 0;
+    cursor: pointer;
+    transition: 0.4s all;
+    display: flex;
+    box-shadow: 0 0 5px black;
+}
+
+.menu-lateral ul li:hover {
+    margin-top: -10px;
+}
+
+.menu-lateral ul li a{
+    padding: 13px;
+    color:#FFF;
+    text-decoration:none;
+}
+section{
+    padding-right:20px;
+}
 </style>
 </head>
 
+<section id="convites">
 
 <div class="container-fluid" style="padding-bottom:50px">
 	<div class="row">
@@ -197,6 +238,79 @@ $json = json_decode($resp, true);
     </h2>
 </div>
 
+</section>
+
+<section id="mensagens">
+
+<div class="container-fluid" style="padding-bottom:50px">
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>
+							Nome
+						</th>
+						<th>
+                            Mensagem
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            
+                        </th>
+					</tr>
+				</thead>
+				<tbody>
+                    <?php 
+                    if(is_array($messages))
+                    foreach($messages as $id => $message): ?>
+                    <tr>
+                        <td><?php echo $message['name']; ?></td>
+                        <td><?php echo $message['msg']; ?></td>
+                        <td><?php echo $message['status']; ?></td>                    
+                        <td>
+                        
+                            <button type='button' class='btn btn-danger' style='float: right;' onclick="request('<?php echo $root.'/guest_messages/?action=remove&id='.$id; ?>')">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+
+                            <button type='button' class='btn btn-success' style='float: right;' onclick="request('<?php echo $root.'/guest_messages/?action=aproval&id='.$id.'&status=1'; ?>')">
+                                <i class="fas fa-check"></i>
+                            </button>
+
+                        </td>                    
+                    </tr>   
+                       
+                    <?php 
+
+                        if($message['status'] == 1)                
+                            $soma['aproved'] += 1; 
+                        else    
+                            $soma['new'] += 1;
+                    endforeach; ?>              
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="total">
+    <h2><b>MENSAGENS:</b> <b><?php echo $soma['aproved']; ?></b> aprovadas e <b><?php echo $soma['new']; ?></b> novas 
+    <span style=" margin-left:20px;"><b>TOTAL: <?php echo count($messages); ?></b></span>
+    </h2>
+</div>
+
+</section>
+
+<div class="menu-lateral">
+    <ul>
+        <li class="bg-warning" onclick=" toggleHash()"><a href="#convites">CONVITES</a></li>
+        <li class="bg-info" onclick=" toggleHash()"><a href="#mensagens">MENSAGENS</a></li>
+    </ul>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
@@ -216,4 +330,28 @@ $json = json_decode($resp, true);
 
     };
 
+    function request(url){
+        fetch(url).then(res=>{            
+            console.log(res);
+            Location.reload();
+        })
+    }
+
+    function toggleHash(){
+        setTimeout(() => {
+            let hash = window.location.hash;
+            console.log(hash)
+            if(hash == "#mensagens"){
+                document.getElementById('mensagens').style.display = "block";
+                document.getElementById('convites').style.display = "none";
+            }else{
+                document.getElementById('mensagens').style.display = "none";
+                document.getElementById('convites').style.display = "block";
+            }
+            
+        }, 200);
+        
+    }
+
+    toggleHash();
 </script>
