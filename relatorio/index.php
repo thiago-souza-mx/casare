@@ -4,7 +4,8 @@ session_start();
 //print_r($_SESSION);
 //$root = 'http://casamento.thaisethiago.tk/';
 $root = 'http://'.$_SERVER['HTTP_HOST'];
-
+if($_GET['server'])
+    print_r($_SERVER);
 $soma = [
     "adult" => 0,
     "child" => 0
