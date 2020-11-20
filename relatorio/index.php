@@ -332,8 +332,12 @@ section{
 
     function request(url){
         fetch(url).then(res=>{            
-            console.log(res);
-            Location.reload();
+            res.json().then(res=>{
+                if(res.error == "200")
+                    location.reload();
+                else
+                    console.log(res);
+            });
         })
     }
 

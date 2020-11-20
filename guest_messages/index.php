@@ -9,9 +9,10 @@ if(isset($_GET)){
 
         $json =  file_get_contents( "messages.json" );
         $json = json_decode( $json, true );
-        if(!empty($jsaon)){
+        if(!empty($json)){
             $json[$_GET['id']]['status'] = $_GET['status']; 
             file_put_contents( "messages.json" , json_encode($json ) );
+            $success = true;
 
         }
 
@@ -22,6 +23,7 @@ if(isset($_GET)){
 
         unset($json[$_GET['id']]);
         file_put_contents( "messages.json" , json_encode($json ) );
+        $success = true;
 
     }else{
         $submit = $_GET['guest_message'];
