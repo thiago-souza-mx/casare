@@ -1,6 +1,10 @@
 <?php
 session_start();
-$root = 'http://'.$_SERVER['HTTP_HOST'];
+
+$root = 'http://casamento.thaisethiago.tk/';
+if(isset($_SERVER["AMBIENTE"]) && $_SERVER["AMBIENTE"] == "PODUCAO")
+    $root = 'http://'.$_SERVER['HTTP_HOST'];
+
 $ch = curl_init($root.'/rest/rest.json?'.uniqid());
 
 curl_setopt_array($ch, [

@@ -2,9 +2,10 @@
 session_start();
 
 //print_r($_SESSION);
-//$root = 'http://casamento.thaisethiago.tk/';
-$root = 'http://'.$_SERVER['HTTP_HOST'];
-if($_GET['server'])
+$root = 'http://casamento.thaisethiago.tk/';
+if(isset($_SERVER["AMBIENTE"]) && $_SERVER["AMBIENTE"] == "PODUCAO")
+    $root = 'http://'.$_SERVER['HTTP_HOST'];
+if(isset($_GET['server']))
     print_r($_SERVER);
 $soma = [
     "adult" => 0,
