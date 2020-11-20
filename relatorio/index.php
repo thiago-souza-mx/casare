@@ -266,7 +266,7 @@ section{
                     <?php 
                     if(is_array($messages))
                     foreach($messages as $id => $message): ?>
-                    <tr>
+                    <tr class="<?php echo $message['status'] > 0 ? "table-success" : ''; ?>"> 
                         <td><?php echo $message['name']; ?></td>
                         <td><?php echo $message['msg']; ?></td>
                         <td><?php echo $message['status']; ?></td>                    
