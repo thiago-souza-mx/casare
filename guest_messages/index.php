@@ -5,7 +5,7 @@ header("Access-Control-Allow-Origin: *");
 $success = false;
 if(isset($_GET)){
     
-    if($_GET['action'] == "aproval"){
+    if(isset($_GET['action']) && $_GET['action'] == "aproval"){
 
         $json =  file_get_contents( "messages.json" );
 

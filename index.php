@@ -96,21 +96,23 @@ print_r( $html);
         `;
         let n = 0;
         object.forEach(list=>{
-            arrayMsg += `
-                <div class="message-item">
-                    <div class="row">
-                        <div class="col-xs-10 col-xs-offset-1 text-center">
-                            <p class="lato-light-italic" data-anchor="guest-messages-section" data-behavior="view_more" data-button-class="text-center center-block text-lg pathway-font uppercase" data-max-height="120" style="height: auto; overflow: visible;">
-                            ${list.msg}
-                            </p>
-                            <h3>${list.name}</h3><span class="lato-light">${list.date}</span></div>
-                    </div>
-                </div>                
-            `;
-            n++;
+            if(!!list.aproval){
+                arrayMsg += `
+                    <div class="message-item">
+                        <div class="row">
+                            <div class="col-xs-10 col-xs-offset-1 text-center">
+                                <p class="lato-light-italic" data-anchor="guest-messages-section" data-behavior="view_more" data-button-class="text-center center-block text-lg pathway-font uppercase" data-max-height="120" style="height: auto; overflow: visible;">
+                                ${list.msg}
+                                </p>
+                                <h3>${list.name}</h3><span class="lato-light">${list.date}</span></div>
+                        </div>
+                    </div>                
+                `;
+                n++;
 
-            if(n < object.length)
-                arrayMsg += divider
+                if(n < object.length)
+                    arrayMsg += divider
+            }
         })
 
         let html =`
