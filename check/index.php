@@ -1,7 +1,7 @@
 <?php
 session_start();
-
-$ch = curl_init('https://www.eadsegurancadotrabalho.com.br/api/rest/rest.json?'.uniqid());
+$root = 'http://'.$_SERVER['HTTP_HOST'];
+$ch = curl_init($root.'/rest/rest.json?'.uniqid());
 
 curl_setopt_array($ch, [
 
@@ -23,7 +23,7 @@ if(isset($_GET['action'])){
             unset( $json[$_SESSION['name']]['companions_attributes']);
     }
 
-    $ch = curl_init('https://www.eadsegurancadotrabalho.com.br/api/rest/?'.uniqid());
+    $ch = curl_init($root.'/rest/?'.uniqid());
 
     curl_setopt_array($ch, [
 
@@ -62,7 +62,7 @@ if(isset($_GET['action'])){
         }
     }
 
-    $ch = curl_init('https://www.eadsegurancadotrabalho.com.br/api/rest/?'.uniqid());
+    $ch = curl_init($root.'/rest/?'.uniqid());
 
     curl_setopt_array($ch, [
 

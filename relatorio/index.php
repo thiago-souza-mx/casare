@@ -2,13 +2,14 @@
 session_start();
 
 //print_r($_SESSION);
+$root = 'http://'.$_SERVER['HTTP_HOST'];
 
 $soma = [
     "adult" => 0,
     "child" => 0
 ];
 $id= 0;
-$ch = curl_init('https://www.eadsegurancadotrabalho.com.br/api/rest/rest.json?'.uniqid());
+$ch = curl_init($root.'/rest/rest.json?'.uniqid());
 
 curl_setopt_array($ch, [
 
