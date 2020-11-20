@@ -14,7 +14,7 @@ $resp = curl_exec($ch);
 curl_close($ch);
 
 $json = json_decode($resp, true);
-
+print_r($json);
 if(isset($_GET['action'])){
     if($_GET['action'] == "convidados"){
         $json[$_SESSION['name']]['companions_attributes'] = $_POST['guest']['companions_attributes'];
