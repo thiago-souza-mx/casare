@@ -9,11 +9,11 @@ if(isset($_GET)){
 
         $json =  file_get_contents( "messages.json" );
         $json = json_decode( $json, true );
+        if(!empty($jsaon)){
+            $json[$_GET['id']]['status'] = $_GET['status']; 
+            file_put_contents( "messages.json" , json_encode($json ) );
 
-        $json[$_GET['id']]['aproval'] = $_GET['status']; 
-        file_put_contents( "messages.json" , json_encode($json ) );
-
-        print_r($json);
+        }
 
     }elseif(isset($_GET['action']) && $_GET['action'] == "remove"){
 
