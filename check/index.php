@@ -15,9 +15,11 @@ curl_close($ch);
 
 $json = json_decode($resp, true);
 
+print_r($json);
+
 if(isset($_GET['action'])){
     if($_GET['action'] == "convidados"){
-        $json[$_SESSION['name']]['companions_attributes'] = $_POST['guest']['companions_attributes'];
+        $json[$_SESSION['name']]['companions_attributes'] = $_GET['guest']['companions_attributes'];
     }elseif($_GET['action'] == "sozinho"){
         if($json[$_SESSION['name']]['companions_attributes'])
             unset( $json[$_SESSION['name']]['companions_attributes']);
@@ -38,7 +40,7 @@ if(isset($_GET['action'])){
 
     header("Location:/ok");
 }else{
-    $nome = strtolower($_POST['name']);
+    $nome = strtolower($_GET['name']);
     $check = false;
     $confirm = false;
     $link = '/';
@@ -47,17 +49,17 @@ if(isset($_GET['action'])){
             $check = $k;
     }
     if($check){
-        if(isset($_POST['confirm'])){
+        if(isset($_GET['confirm'])){
             $confirm = $json[$check]['status'] = "confirmou";
             $link = $json[$check]['sim'];
 
         }
-        elseif(isset($_POST['maybe'])){
-            $json[$check]['status'] = $_POST['maybe'];
+        elseif(isset($_GET['maybe'])){
+            $json[$check]['status'] = $_GET['maybe'];
             $redirect =$json[$check]['nao'];
         }
-        elseif(isset($_POST['decline'])){
-            $json[$check]['status'] = $_POST['decline'];
+        elseif(isset($_GET['decline'])){
+            $json[$check]['status'] = $_GET['decline'];
             $redirect =$json[$check]['nao'];
         }
     }
