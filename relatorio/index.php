@@ -34,7 +34,7 @@ $json = json_decode($json, true);
 $messages = Request($root.'/guest_messages/messages.json?'.uniqid());
 $messages = json_decode($messages, true);
 if(empty($messages))
-    $messages = 0;
+    $messages = [];
 ?>
 <head>
   <meta http-equiv="refresh" content="30">
