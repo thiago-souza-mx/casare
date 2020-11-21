@@ -22,7 +22,11 @@ if(isset($_GET)){
         $json = json_decode( $json, true );
 
         unset($json[$_GET['id']]);
-        file_put_contents( "messages.json" , json_encode($json ) );
+        $array = [];
+        foreach($json as $j):
+            $array[] = $j;
+        endforeach;
+        file_put_contents( "messages.json" , json_encode($array) );
         $success = true;
 
     }else{

@@ -88,9 +88,30 @@ $messages = json_decode($messages, true);
     text-decoration:none;
 }
 section{
+    display: none;
     padding-right:20px;
 }
 </style>
+<script>
+
+function toggleHash(){
+        setTimeout(() => {
+            let hash = window.location.hash;
+            console.log(hash)
+            if(hash == "#mensagens"){
+                document.getElementById('mensagens').style.display = "block";
+                document.getElementById('convites').style.display = "none";
+            }else{
+                document.getElementById('mensagens').style.display = "none";
+                document.getElementById('convites').style.display = "block";
+            }
+            
+        }, 200);
+        
+    }
+
+    toggleHash();
+</script>
 </head>
 
 <section id="convites">
@@ -258,6 +279,9 @@ section{
                             Status
                         </th>
                         <th>
+                            E-mail
+                        </th>
+                        <th>
                             
                         </th>
 					</tr>
@@ -270,6 +294,7 @@ section{
                         <td><?php echo $message['name']; ?></td>
                         <td><?php echo $message['msg']; ?></td>
                         <td><?php echo $message['status']; ?></td>                    
+                        <td><a href="mailto:<?php echo $message['mail']; ?>"><i class="fas fa-envelope" style="font-size:32px"></i></a></td>                    
                         <td>
                             
                             <button type='button' class='btn btn-danger' style='float: right;' onclick="request('<?php echo $root.'/guest_messages/?action=remove&id='.$id; ?>')">
@@ -343,21 +368,5 @@ section{
         })
     }
 
-    function toggleHash(){
-        setTimeout(() => {
-            let hash = window.location.hash;
-            console.log(hash)
-            if(hash == "#mensagens"){
-                document.getElementById('mensagens').style.display = "block";
-                document.getElementById('convites').style.display = "none";
-            }else{
-                document.getElementById('mensagens').style.display = "none";
-                document.getElementById('convites').style.display = "block";
-            }
-            
-        }, 200);
-        
-    }
 
-    toggleHash();
 </script>
