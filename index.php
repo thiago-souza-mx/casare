@@ -60,7 +60,7 @@ $html = str_replace('method="post"','method="get"',$html);
 print_r( $html);
 
 ?>
-
+<div id="lista_de_presente"></div>
 <style>
 
 #guest-messages .guest-message-container{

@@ -1232,7 +1232,7 @@ wf-active" lang="pt-BR">
             </div>
         </div>
         <div class="row rsvp-confirm">
-            <div class="col-xs-12 text-center"><br><a class="btn btn-success btn-orange btn-lg pathway-font uppercase" href="https://www.thaiserafa.life">veja nosso Site de Casamento</a></div>
+            <div class="col-xs-12 text-center"><br><a class="btn btn-success btn-orange btn-lg pathway-font uppercase" href="http://casamento.thaisethiago.tk">veja nosso Site de Casamento</a></div>
         </div>
     </div>
     <!--[if (gte IE 6)&(lte IE 8)]><script src="https://assets3.casare.me/assets/nwmatcher/src/nwmatcher-ab0ba7c8f49769825b426eba60f892c5.js"></script><script src="https://assets3.casare.me/assets/selectivizr/selectivizr-01397808a76a7260b0689aca9bdc42ab.js"></script><![endif]-->
