@@ -276,7 +276,7 @@ section{
                                 <i class="fas fa-trash-alt"></i>
                             </button>
 
-                            <?php if( $message['status'] > 0 ){ ?>
+                            <?php if( $message['status'] == 0 ){ ?>
                                 <button type='button' class='btn btn-success' style='float: right;' onclick="request('<?php echo $root.'/guest_messages/?action=aproval&id='.$id.'&status=1'; ?>')">
                                     <i class="fas fa-check"></i>
                                 </button>                                
