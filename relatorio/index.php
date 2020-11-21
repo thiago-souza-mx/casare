@@ -33,7 +33,8 @@ $json = json_decode($json, true);
 
 $messages = Request($root.'/guest_messages/messages.json?'.uniqid());
 $messages = json_decode($messages, true);
-
+if(empty($messages))
+    $messages = 0;
 ?>
 <head>
   <meta http-equiv="refresh" content="30">
@@ -288,7 +289,7 @@ function toggleHash(){
 				</thead>
 				<tbody>
                     <?php 
-                    if(is_array($messages))
+                    if(!empty($messages) && is_array($messages))
                     foreach($messages as $id => $message): ?>
                     <tr class="<?php echo $message['status'] > 0 ? "table-success" : ''; ?>"> 
                         <td><?php echo $message['name']; ?></td>
