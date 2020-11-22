@@ -351,7 +351,7 @@ print_r( $html);
         adjustButtons:()=>{
 
             let btns = document.querySelector('input[data-target="#rsvp-captcha-message"]').parentNode.parentNode.parentNode
-            btns.classList.add('d-flex','flex-row')
+            btns.classList.add('d-flex','flex-row','align-center')
             btns = btns.childNodes
             btns.forEach(item=>{
                 item.classList.add('mx-10')
@@ -367,13 +367,15 @@ print_r( $html);
                 .flex-row{
                     flex-direction: row;
                 }
+                .align-center{
+                    align-items: center;
+                }
                 .mx-10{
                     margin:10px 0;
                 }
                 @media (max-width:500px){
                     .flex-row{
-                        flex-direction: column;
-                        align-items: center;
+                        flex-direction: column;                        
                     } 
                     .rota-btns{
                         padding-bottom:15px;
