@@ -370,6 +370,11 @@ print_r( $html);
                 .mx-10{
                     margin:10px 0;
                 }
+                #rsvp .confirm:hover, 
+                #rsvp .maybe:hover, 
+                #rsvp .decline:hover{
+                    color: #ffc985!important;
+                }
                 @media (max-width:500px){
                     .flex-row{
                         flex-direction: column;
