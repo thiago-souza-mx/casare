@@ -238,6 +238,7 @@ print_r( $html);
             document.body.appendChild(frame)
             Lista.setRota()
             Lista.setStyle()
+            Lista.adjustButtons()
 
         },
         open:()=>{
@@ -347,6 +348,16 @@ print_r( $html);
 
             elem.insertAdjacentHTML('beforebegin', html);
         },
+        adjustButtons:()=>{
+
+            let btns = document.querySelector('input[data-target="#rsvp-captcha-message"]').parentNode.parentNode.parentNode
+            btns.classList.add('d-flex','flex-row')
+            btns = btns.childNodes
+            btns.forEach(item=>{
+                item.classList.add('mx-10')
+            })
+
+        },
         setStyle:()=>{
             let style=`
             <style>
@@ -356,9 +367,13 @@ print_r( $html);
                 .flex-row{
                     flex-direction: row;
                 }
+                .mx-10{
+                    margin:10px 0;
+                }
                 @media (max-width:500px){
                     .flex-row{
                         flex-direction: column;
+                        align-items: center;
                     } 
                     .rota-btns{
                         padding-bottom:15px;
