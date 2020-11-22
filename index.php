@@ -60,7 +60,6 @@ $html = str_replace('method="post"','method="get"',$html);
 print_r( $html);
 
 ?>
-<div id="lista_de_presente"></div>
 <style>
 
 #guest-messages .guest-message-container{
@@ -145,8 +144,232 @@ print_r( $html);
 
     setMessages('<?php echo Request($root.'/guest_messages/messages.json'); ?>');
 
-
     <?php if($name){
         echo "setName('{$name}');";
     } ?>
+
+    const Lista = {
+        delay:200,
+        button:{
+            id:"lista_de_presentes",
+            img:"/images/icone_presentes.png",
+            w:"80px",
+            h:"80px",
+            rd:"30px 30px 15px 35px",
+            bg:"#FFF",
+            b:"20px",
+            r:"20px",
+            zi:"999999",
+            sz:"80%",
+            bgpos:"center",
+            pos:"fixed",
+            boxshw:"-3px 4px 8px -5px rgba(0,0,0,0.5)",
+            cur:"pointer"
+        },
+        iframe:{
+            id:"frame_lista",
+            url:"/lista/?n="+<?php echo $name; ?>,
+            w:"400px",
+            h:"550px",
+            rd:"10px 10px 30px 10px",
+            bg:"#FFF",
+            pos:"fixed",
+            b:"20px",
+            r:"20px",
+            zi:"999998",
+            boxshw:"-2px 2px 15px -3px rgba(0,0,0,0.5)",            
+        },
+        init:()=>{
+            if(window.outerWidth < 500){
+                Lista.iframe.w = "100%"
+                Lista.iframe.h ="100%"
+                Lista.iframe.rd = "50px"
+                Lista.iframe.b = "30px"
+                Lista.iframe.r = "30px"
+            }
+            let btn = Lista.button
+            let frm = Lista.iframe
+            let button = document.createElement('div')
+            button.id = btn.id
+            button.setAttribute(
+                'style',
+                `background-image:url('${btn.img}');
+                background-repeat:no-repeat;
+                background-size:${btn.sz}; 
+                background-color:${btn.bg};
+                background-position:${btn.bgpos};
+                width:${btn.w};
+                height:${btn.h};
+                border-radius:${btn.rd};
+                position:${btn.pos};
+                bottom:${btn.b};
+                right:${btn.r};
+                z-index:${btn.zi};
+                box-shadow:${btn.boxshw};
+                cursor:${btn.cur};
+                transition:0.5s all;
+                `
+            ),
+            button.setAttribute('onclick','Lista.open()')
+            document.body.appendChild(button)
+
+            let frame = document.createElement('iframe')
+            frame.id = frm.id
+            frame.setAttribute('frameborder',0)
+            frame.setAttribute('class','hide')
+            frame.height= frm.h 
+            frame.scrolling="no"
+            frame.setAttribute(
+                'style',
+                `
+                background:${frm.bg};
+                width:0;
+                height:0;
+                border-radius:${frm.rd};
+                position:${frm.pos};
+                bottom:${frm.b};
+                right:${frm.r};
+                z-index:${frm.zi};
+                box-shadow:${frm.boxshw};
+                display:none;
+                transition:0.4s all;
+                `
+            ),
+            document.body.appendChild(frame)
+            Lista.setRota()
+            Lista.setStyle()
+
+        },
+        open:()=>{
+            let btn = Lista.button
+            let frm = Lista.iframe
+            let iframe = document.getElementById(Lista.iframe.id)
+            if(iframe.getAttribute('class').indexOf('hide')>-1){
+                iframe.style.display = "block"
+                iframe.classList.add('show')
+                iframe.classList.remove('hide')
+                
+                setTimeout(()=>{
+                    if(window.outerWidth < 500){
+                        iframe.style.bottom = 0
+                        iframe.style.right = 0
+                        iframe.style.borderRadius = 0
+                    }
+                    iframe.style.width = frm.w
+                    iframe.style.height = frm.h
+                },100)
+                Lista.toggleClose('show')
+            }else{            
+                iframe.style.width = 0
+                iframe.style.height = 0 
+                if(window.outerWidth < 500){
+                    iframe.style.bottom = frm.b
+                    iframe.style.right = frm.r
+                    iframe.style.borderRadius = frm.rd
+                }
+                iframe.classList.remove('show')           
+                setTimeout(()=>{
+                    iframe.classList.add('hide')
+                },500) 
+                Lista.toggleClose('hide')
+            }        
+        },
+        toggleClose:hash=>{
+            let btn = Lista.button
+            let button = document.getElementById(btn.id)
+            let iframe = document.getElementById(Lista.iframe.id)
+            if(hash == 'show'){
+                button.style.borderRadius = "100%"
+                button.style.boxShadow = "0 0 4px rgba(0,0,0,0.6)"
+                button.style.transform = "rotate(-720deg)"
+                button.style.width = "60px"
+                button.style.height = "60px"
+                button.style.backgroundImage = "url(/images/close.jpg)"
+                iframe.src = Lista.iframe.url
+
+            }else{
+                button.style.borderRadius = btn.rd
+                button.style.boxShadow = btn.boxshw
+                button.style.transform = "rotate(0deg)"
+                button.style.width = btn.w
+                button.style.height = btn.h
+                button.style.backgroundImage = `url(${btn.img})`
+            }
+            
+
+        }, 
+        setRota: ()=>{
+            let elem = document.querySelector('#countdown'),
+
+            html = `
+                <section id="events">
+                    <div class="events-background"></div>
+                    <div class="container-fluid">
+                        <h3 class="text-center section-title pathway"><span class="pad-h-5 pad-h-m-5 title marker font-size-50 font-size-m-50">{</span><span class="pad-h-50 title great-vibes font-size-40 pad-h-m-15 font-size-m-30">Localização</span><span class="pad-h-5 pad-h-m-5 title marker font-size-50 font-size-m-50">}</span></h3>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="event-container">
+                                    <div class="event-item">
+                                        <div class="row margin-0 d-flex flex-row" >
+                                            <div class="col-md-6 text-center pad-top-25 pad-bottom-10">
+                                                <h4 class="great-vibes font-size-50 font-size-m-30 margin-v-5">Nossa Festa</h4>
+                                                <div class="show-more-wrapper"><div data-height="fill" class="show-more" id="0037937888545931164" style="height: auto; overflow: visible;"><div class="lato-light font-size-17" data-behavior="view_more" data-button-class="text-center center-block lato-light" data-max-height="80" style="height: auto; overflow: visible;"><p>
+                                                    </p><p>Comemoraremos nosso amor nesse espaço no qual achamos muito aconchegante e adequado para as pessoas que amamos!.
+                                                    </p>
+                                                    <p>Fica próximo ao  CEU Guarapiranga. 
+                                                    </p>
+
+
+                                                    <p>Mas se caso houver duvidas, podem nos chamar no whatsapp compartilharemos no localização em tempo real ;)</p><p></p></div></div></div>
+                                                <p class="pathway font-size-20 font-size-m-18 uppercase">12/12 as 18:00</p>
+                                                <hr class="margin-v-5 margin-h-100">
+                                                <p class="lato-light font-size-17 address">Endereço<strong>&nbsp;&nbsp;⋅&nbsp;&nbsp;</strong>Est. da Baronesa ,&nbsp;13a <br>pq do lago &nbsp;-&nbsp;São Paulo &nbsp;-&nbsp;SP &nbsp;</p>
+                                                <div class="rota-btns text-center pad-top-25 pad-bottom-10">
+                                                    <a href="https://maps.app.goo.gl/aL3Z4NFJLG6o9xVG9" target="_blank" class="btn btn-danger">Abra no MAPs</a>
+                                                    <a href="https://waze.com/ul?a=share_drive&locale=pt_BR&sd=4CliIkKx2B-DP&env=row&utm_source=waze_app&utm_campaign=share_drive" target="_blank" class="btn btn-info">Abra no Waze</a>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-6 pad-0">
+                                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3653.3599280044477!2d-46.77113208588941!3d-23.698837484614867!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5211568a6e1b%3A0x21c9e7abd2d3d831!2sEliane%20Festas!5e0!3m2!1spt-BR!2sbr!4v1606076788606!5m2!1spt-BR!2sbr" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            `;
+
+            elem.insertAdjacentHTML('beforebegin', html);
+        },
+        setStyle:()=>{
+            let style=`
+            <style>
+                .d-flex{
+                    display: flex;
+                }
+                .flex-row{
+                    flex-direction: row;
+                }
+                @media (max-width:500px){
+                    .flex-row{
+                        flex-direction: column;
+                    } 
+                    .rota-btns{
+                        padding-bottom:15px;
+                    }
+                }
+            </style>
+            `
+            document.head.insertAdjacentHTML('beforeend', style)
+        }
+    };
+
+    Lista.init()
+
 </script>
