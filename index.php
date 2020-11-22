@@ -373,7 +373,7 @@ print_r( $html);
                 @media (max-width:500px){
                     .flex-row{
                         flex-direction: column;
-                        align-content:center;
+                        align-items: center;
                     } 
                     .rota-btns{
                         padding-bottom:15px;
