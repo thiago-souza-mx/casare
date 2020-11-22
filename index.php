@@ -168,7 +168,7 @@ print_r( $html);
         },
         iframe:{
             id:"frame_lista",
-            url:"/lista/?n="+<?php echo $name; ?>,
+            url:"/lista/?n=<?php echo $name; ?>",
             w:"400px",
             h:"550px",
             rd:"10px 10px 30px 10px",
