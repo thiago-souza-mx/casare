@@ -30,19 +30,25 @@ if(isset($_GET['n'])){
     if(isset($json[$name])){
         $json[$name]['name'] = $name;
         $_SESSION['convidado'] = $json[$name];
+
+        $cookie_name = "convidado";
+        $cookie_value = json_encode( $json[$name] );
+        setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/");
+
         if(!isset($json[$name]['status']) && !isset($_GET['rsvp'])){       
             header("Location:?rsvp=true#rsvp");
         }else{
             if(isset($json[$name]['status'])){
                 if($json[$name]['status'] == "confirmou" ){
                     $status = true;
+                    header("Location:/");
                 }
             }
         }
     }
 }
-if(isset($_SESSION['convidado'])){
-    $name = $_SESSION['convidado']['name'];
+if(isset($_COOKIE['convidado'])){
+    $name = json_decode( $_COOKIE['convidado'], true )['name'];
     //print_r($_SESSION['convidado']);
 }
 
@@ -498,13 +504,19 @@ print_r( $html);
                     width:0!important;
                     padding:0!important;
                 }
-                @media (max-width:500px){
+                @media (max-width:800px){
                     .flex-row{
                         flex-direction: column;
                         align-items: center;
                     } 
+                    .escutcheon-container{
+                        display:none!important;
+                    }
                     .rota-btns{
                         padding-bottom:15px;
+                    }
+                    #about .couple-name .container-fluid > div{
+                        white-space: pre-wrap;
                     }
                 }
             </style>
