@@ -220,7 +220,6 @@ print_r( $html);
 
             setInterval(()=>{
                 Lista.timer();
-                console.log("oi")
             },1000*10)
             if(window.outerWidth < 500){
                 Lista.divframe.w = "100%"
@@ -344,12 +343,10 @@ print_r( $html);
             Lista.setStyle()
             Lista.adjustButtons()
 
-            let section = document.getElementById('by_our_side')
+            /*let section = document.getElementById('by_our_side')
             document.getElementById('by_our_side').remove()
             document.getElementById('events').insertAdjacentHTML('beforeend', "<div id='insert'></div>");
-            document.getElementById('insert').append(section)
-
-            
+            document.getElementById('insert').append(section)   */        
 
         },
         open:()=>{
@@ -536,5 +533,10 @@ print_r( $html);
     };
 
     Lista.init()
+
+    setTimeout(()=>{
+        document.querySelector('#by_our_side .slick-initialized').classList.remove('slick-slider');
+        document.querySelectorAll('#by_our_side .slick-slider').forEach(item=> item.classList.remove('slick-slider'))
+    },1000 );
 
 </script>
