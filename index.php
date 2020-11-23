@@ -405,8 +405,8 @@ print_r( $html);
 
                                             </div>
 
-                                            <div class="col-md-6 pad-0" style="min-height: 300px; width: 100%;">
-                                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3653.3599280044477!2d-46.77113208588941!3d-23.698837484614867!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5211568a6e1b%3A0x21c9e7abd2d3d831!2sEliane%20Festas!5e0!3m2!1spt-BR!2sbr!4v1606076788606!5m2!1spt-BR!2sbr" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                                            <div class="col-md-6 pad-0">
+                                                <iframe style="min-height: 300px; width: 100%;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3653.3599280044477!2d-46.77113208588941!3d-23.698837484614867!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5211568a6e1b%3A0x21c9e7abd2d3d831!2sEliane%20Festas!5e0!3m2!1spt-BR!2sbr!4v1606076788606!5m2!1spt-BR!2sbr" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
                                             </div>
                                         </div>
                                     </div>
