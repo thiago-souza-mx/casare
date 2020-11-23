@@ -533,10 +533,17 @@ print_r( $html);
     };
 
     Lista.init()
-
-    setTimeout(()=>{
-        document.querySelector('#by_our_side .slick-initialized').classList.remove('slick-slider');
-        document.querySelectorAll('#by_our_side .slick-slider').forEach(item=> item.classList.remove('slick-slider'))
-    },1000 );
+    function removeSlick(){
+        setTimeout(()=>{
+            document.querySelector('#by_our_side .slick-initialized').classList.remove('slick-slider');
+            document.querySelectorAll('#by_our_side .slick-slider').forEach(item=> item.classList.remove('slick-slider'))
+        },1000 );
+    }
+    removeSlick()
+    document.querySelectorAll('.character-item').forEach(item =>{
+        item.addEventListener('click',()=>{
+            removeSlick()
+        })
+    })
 
 </script>
