@@ -1,11 +1,9 @@
 <?php
 session_start();
 
-$root = 'http://casamento.thaisethiago.tk/';
-if(isset($_SERVER["AMBIENTE"]) && $_SERVER["AMBIENTE"] == "PODUCAO")
-    $root = 'http://'.$_SERVER['HTTP_HOST'];
+require_once(__DIR__."/../global/index.php");
 
-$ch = curl_init($root.'/rest/rest.json?'.uniqid());
+$ch = curl_init(CONV_JSON.'?'.uniqid());
 
 curl_setopt_array($ch, [
 
@@ -29,7 +27,7 @@ if(isset($_GET['action'])){
             unset( $json[$_SESSION['name']]['companions_attributes']);
     }
 
-    $ch = curl_init($root.'/rest/?'.uniqid());
+    $ch = curl_init(CONVITES.'?'.uniqid());
 
     curl_setopt_array($ch, [
 
@@ -70,7 +68,7 @@ if(isset($_GET['action'])){
         }
     }
 
-    $ch = curl_init($root.'/rest/?'.uniqid());
+    $ch = curl_init(CONVITES.'?'.uniqid());
 
     curl_setopt_array($ch, [
 

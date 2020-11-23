@@ -1,83 +1,20 @@
-<?php
-header("Access-Control-Allow-Headers: *"); 
-header("Access-Control-Allow-Origin: *"); 
+<?php 
 
-$success = false;
-if(isset($_GET)){
+require_once(__DIR__."/../global/index.php");
+
+$ch = curl_init(MESSAGES.'?'.$_SERVER['QUERY_STRING']);
+
+curl_setopt_array($ch, [
+
+    CURLOPT_CUSTOMREQUEST => 'GET',
+    CURLOPT_RETURNTRANSFER => 1,
     
-    if(isset($_GET['action']) && $_GET['action'] == "aproval"){
+]);
 
-        $json =  file_get_contents( "messages.json" );
-        $json = json_decode( $json, true );
-        if(!empty($json)){
-            $json[$_GET['id']]['status'] = $_GET['status']; 
-            file_put_contents( "messages.json" , json_encode($json ) );
-            $success = true;
+$resp = curl_exec($ch);
+curl_close($ch);
 
-        }
+echo $resp;
 
-    }elseif(isset($_GET['action']) && $_GET['action'] == "remove"){
-
-        $json =  file_get_contents( "messages.json" );
-        $json = json_decode( $json, true );
-
-        unset($json[$_GET['id']]);
-        $array = [];
-        foreach($json as $j):
-            $array[] = $j;
-        endforeach;
-        file_put_contents( "messages.json" , json_encode($array) );
-        $success = true;
-
-    }else{
-        $submit = $_GET['guest_message'];
-        $name = $submit['name'];
-        $mail = $submit['mail'];
-        $msg = $submit['message'];
-
-        if(!empty($name) && !empty($mail) && !empty($msg)){
-
-            setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
-            date_default_timezone_set('America/Sao_Paulo');
-            $date = strftime('%d de %B de %Y', strtotime('today'));
-
-            $data = array(
-                "msg" => $msg,
-                "mail" => $mail,
-                "name" => $name,
-                "date" => $date,
-                "time" => date("h:i:s"),
-                "status" => 0
-            );
-            
-            $json =  file_get_contents( "messages.json" );
-
-            if(empty($json)){
-                $json = [];
-            }else{
-                $json = json_decode( $json, true );
-            }
-
-            $json[] = $data; 
-            file_put_contents( "messages.json" , json_encode($json ) );
-            
-            //print_r($data);
-            $success = true;
-        }
-    }
-}
-if($success){   
-    $msg = array(
-        "status"=>"200",
-        "message"=>[
-            "message_success"=>"mensagem enviada"
-        ]        
-    );
-    echo json_encode($msg);
-}else{
-    http_response_code(404);
-}
-
-?>
 
 

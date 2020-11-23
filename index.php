@@ -1,8 +1,6 @@
 <?php
 session_start();
-$root = 'http://casamento.thaisethiago.tk/';
-if(isset($_SERVER["AMBIENTE"]) && $_SERVER["AMBIENTE"] == "PODUCAO")
-    $root = 'http://'.$_SERVER['HTTP_HOST'];
+require_once(__DIR__."/global/index.php");
 
 $app = 'thaisandrafa';
 if(isset($_SERVER["AMBIENTE"]) && $_SERVER["AMBIENTE"] == "PODUCAO")
@@ -26,7 +24,7 @@ $name = false;
 $status = false;
 if(isset($_GET['n'])){
     $name = $_GET['n'];
-    $json = Request($root.'/rest/rest.json?'.uniqid());
+    $json = Request(CONV_JSON.'?'.uniqid());
     $json = json_decode($json, true);    
     
     if(isset($json[$name])){
@@ -79,7 +77,7 @@ $html = str_replace('method="post"','method="get"',$html);
 if($status){
     echo "<style>#nome, .btn-status{display:none} .btn-status:nth-child(1){display:block;    margin: auto;}</style>";
     $html = str_replace('olá, convidado,','olá, '.$name.',',$html);
-    $html = str_replace('sua presença é muito importante para nós','sua presença já foi confimada',$html);
+    $html = str_replace('sua presença é muito importante para nós','sua presença já foi confimada.<br> Caso queira cancelar é só clicar em não vou abaixo.',$html);
 }
 
 

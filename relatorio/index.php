@@ -1,9 +1,7 @@
 <?php
 session_start();
 
-$root = 'http://casamento.thaisethiago.tk';
-if(isset($_SERVER["AMBIENTE"]) && $_SERVER["AMBIENTE"] == "PODUCAO")
-    $root = 'http://'.$_SERVER['HTTP_HOST'];
+require_once(__DIR__."/../global/index.php");
 if(isset($_GET['server']))
     print_r($_SERVER);
 $soma = [
@@ -28,10 +26,10 @@ function Request($url){
     return $resp;
 }
 
-$json = Request($root.'/rest/rest.json?'.uniqid());
+$json = Request(CONV_JSON.'?'.uniqid());
 $json = json_decode($json, true);
 
-$messages = Request($root.'/guest_messages/messages.json?'.uniqid());
+$messages = Request(MESS_JSON.'?'.uniqid());
 $messages = json_decode($messages, true);
 if(empty($messages))
     $messages = [];
@@ -298,12 +296,12 @@ function toggleHash(){
                         <td><a href="mailto:<?php echo $message['mail']; ?>"><i class="fas fa-envelope" style="font-size:32px"></i></a></td>                    
                         <td>
                             
-                            <button type='button' class='btn btn-danger' style='float: right;' onclick="request('<?php echo $root.'/guest_messages/?action=remove&id='.$id; ?>')">
+                            <button type='button' class='btn btn-danger' style='float: right;' onclick="request('<?php echo MESSAGES.'?action=remove&id='.$id; ?>')">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
 
                             <?php if( $message['status'] == 0 ){ ?>
-                                <button type='button' class='btn btn-success' style='float: right;' onclick="request('<?php echo $root.'/guest_messages/?action=aproval&id='.$id.'&status=1'; ?>')">
+                                <button type='button' class='btn btn-success' style='float: right;' onclick="request('<?php echo MESSAGES.'?action=aproval&id='.$id.'&status=1'; ?>')">
                                     <i class="fas fa-check"></i>
                                 </button>                                
                             <?php } ?>
