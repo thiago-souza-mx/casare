@@ -9,8 +9,8 @@ if(isset($_POST['body']) && !empty($_POST['body'])){
 	$data = file_get_contents("php://input");
 }
 
-file_put_contents("../lista.json", $data );
+file_put_contents("/lista/lista.json", $data );
 
-print_r( file_get_contents( "../lista.json" ) ); 
+print_r( file_get_contents( "/lista/lista.json" ) ); 
 
-print_r($data);
+//print_r($data);
