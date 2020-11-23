@@ -1,8 +1,26 @@
 <?php 
-
+$name = false;
 if(isset($_GET['n'])){
-    //echo $_GET['n'];
+    $name =  $_GET['n'];
 }
+require_once(__DIR__."/../global/index.php");
+
+function Request($url){
+
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_RETURNTRANSFER => 1,
+    ]);
+
+    $resp = curl_exec($ch);
+    curl_close($ch);
+    return $resp;
+}
+
+$lista = Request(LISTA_JSON.'?'.uniqid());
+$lista = json_decode($lista, true);
 ?>
 
 <html lang="pt-br"><head>
@@ -43,6 +61,13 @@ if(isset($_GET['n'])){
           background-position:center;
           border-bottom:1px solid #d9dcdf;
       }
+
+      .disabled {
+          opacity:0.6;
+      }
+      .disabled .img-produto{
+          filter: grayscale(1);
+      }
     </style>
     <!-- Custom styles for this template -->
 
@@ -72,29 +97,28 @@ if(isset($_GET['n'])){
  
 
         <!-- Card -->
-
+        <?php foreach($lista as $id => $item): ?>
         <div class="col-md-4">
-          <div class="card mb-4 shadow-sm rounded-lg">
-            <div class="img-produto rounded-top" style="background-image:url('https://http2.mlstatic.com/kit-mop-mor-limpeza-pratica-com-2-esfrego-2-balde-4-refil-D_NQ_NP_958294-MLB25966262738_092017-F.jpg');" ></div>
-            <div class="card-body">
-                <p class="card-text">
-                    MOP da MOR
-                </p>
-                <div class="dropdown-divider"></div>
-
-              <div class="d-flex justify-content-between align-items-center">              
-              <div class="custom-control custom-checkbox" style="flex: 1;">
-                    <input type="checkbox" class="custom-control-input" id="customCheck1">
-                    <label class="custom-control-label" for="customCheck1" style="width: 100%; cursor:pointer;">
-                        Selecionar este!
-                    </label>
+            <div id="card_<?php echo $id; ?>" class="card mb-4 shadow-sm rounded-lg <?php echo $item['status']>0 ? "disabled" : "" ; ?>">
+                <div class="img-produto rounded-top" style="background-image:url('<?php echo $item['image']; ?>');" >
                 </div>
-                <!--small class="text-muted">9 mins</small-->
-              </div>
-            </div>
-          </div>
-        </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <?php echo $item['item']; ?>
+                    </p>
+                    <div class="dropdown-divider"></div>
 
+                    <div class="d-flex justify-content-center align-items-center">  
+                        <?php if($item['status'] == 0){ ?>    
+                            <button class="btn btn-primary my-2" onclick="select(<?php echo $id; ?>, '<?php echo $item['item']; ?>')" >Selecionar</button>    
+                        <?php }else{
+                            echo "Já escolhido!";
+                        } ?> 
+                    </div>            
+                </div>
+            </div>        
+        </div>
+        <?php endforeach; ?>
         <!-- Card -->
 
       </div>
@@ -104,9 +128,82 @@ if(isset($_GET['n'])){
 </main>
 
 
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ModalLabel">Nome Item</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+           <p class="text-center">Para confirmar o presente, informe seus dados abaixo.</p>
+            <form role="form">
+                <input type="hidden" class="form-control" id="id_item" />
+				<div class="form-group">					 
+					<label for="exampleInputEmail1">
+						Nome
+					</label>
+					<input type="text" class="form-control" placeholder="Seu Nome" id="nome" value="<?php echo $name ?? ""; ?>"/>
+				</div>
+				<div class="form-group">					 
+					<label for="exampleInputPassword1">
+						Telefone
+					</label>
+					<input type="text" class="form-control" placeholder="Seu Celular" id="telefone" />
+				</div>
+
+			</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Sair</button>
+        <button type="button" id="salvar" class="btn btn-success" onclick="doar()" data-dismiss="modal">Confirmar Presente</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a href="#" style="display:none" id="add" class='btn btn-warning' data-toggle="modal" data-target="#exampleModal"></a>
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+<script>
 
+    function select(id, nome){
+
+        document.getElementById('ModalLabel').innerText = nome;
+        document.getElementById('id_item').value = id;
+        document.getElementById('add').click();
+
+    }
+    function doar(){
+        let id = document.getElementById('id_item').value;
+
+        obj ={
+            doador:{
+                nome: document.getElementById('nome').value,
+                telefone: document.getElementById('telefone').value
+            }
+        }
+
+        fetch('<?php echo LISTA; ?>?action=doar&id='+id,{
+            method:"POST",
+            body: JSON.stringify(obj)
+        }).then(res =>{
+            res.json().then(resp =>{
+                console.log(resp)
+                if(resp.message.message_success == "sucesso")
+                    adiciona(id)
+            })
+        })
+    }
+
+    function adiciona(id){
+        alert("card_"+id)
+    }
+</script>
 </body>
 </html>

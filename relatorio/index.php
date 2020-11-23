@@ -8,7 +8,9 @@ $soma = [
     "adult" => 0,
     "child" => 0,
     "aproved" => 0,
-    "new" => 0
+    "new" => 0,
+    "ganho" => 0,
+    "aguard" => 0
 ];
 $id= 0;
 
@@ -31,11 +33,18 @@ $json = json_decode($json, true);
 
 $messages = Request(MESS_JSON.'?'.uniqid());
 $messages = json_decode($messages, true);
+
+$lista = Request(LISTA_JSON.'?'.uniqid());
+$lista = json_decode($lista, true);
+
 if(empty($messages))
     $messages = [];
+
+if(empty($lista))
+    $lista = [];
 ?>
 <head>
-  <meta http-equiv="refresh" content="30">
+  <meta http-equiv="refresh" content="200">
   <title>Relatório de convidados</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -60,8 +69,8 @@ if(empty($messages))
 }
 .menu-lateral{
     position: fixed;
-    right: -100px;
-    top: 150px;
+    right: -180px;
+    top: 200px;
     transform: rotate(-90deg);
 }
 .menu-lateral ul{
@@ -81,7 +90,7 @@ if(empty($messages))
     margin-top: -10px;
 }
 
-.menu-lateral ul li a{
+.menu-lateral ul li{
     padding: 13px;
     color:#FFF;
     text-decoration:none;
@@ -93,23 +102,28 @@ section{
 </style>
 <script>
 
-function toggleHash(){
+function toggleHash(ev){       
+
         setTimeout(() => {
-            let hash = window.location.hash;
-            console.log(hash)
+            let hash = ev ;
             if(hash == "#mensagens"){
                 document.getElementById('mensagens').style.display = "block";
                 document.getElementById('convites').style.display = "none";
-            }else{
+                document.getElementById('lista').style.display = "none";
+            }else if(hash == "#convites"){
                 document.getElementById('mensagens').style.display = "none";
                 document.getElementById('convites').style.display = "block";
+                document.getElementById('lista').style.display = "none";
+            }else{
+                document.getElementById('mensagens').style.display = "none";
+                document.getElementById('convites').style.display = "none";
+                document.getElementById('lista').style.display = "block";
             }
-            
+            window.location.href = ev
         }, 200);
-        
-    }
+}
 
-    toggleHash();
+    toggleHash(window.location.hash || "#lista");
 </script>
 </head>
 
@@ -330,10 +344,127 @@ function toggleHash(){
 
 </section>
 
+
+
+<section id="lista">
+
+<div class="container-fluid" style="padding-bottom:50px">
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>
+							Item
+						</th>
+						<th>
+                            Imagem
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Doador
+                        </th>
+                        <th>
+                            telefone
+                        </th>
+                        <th></th>
+					</tr>
+				</thead>
+				<tbody>
+                    <?php 
+                    if(!empty($lista) && is_array($lista))
+                    foreach($lista as $id => $item): ?>
+                    <tr class="<?php echo $item['status'] > 0 ? "table-success" : ''; ?>"> 
+                        <td><?php echo $item['item']; ?></td>
+                        <td><img src="<?php echo $item['image']; ?>" height="100" alt=""></td>
+                        <td><?php echo $item['status']; ?></td>                    
+                        <td><?php echo $item['doador']['nome']; ?></td>                    
+                        <td><?php echo $item['doador']['telefone']; ?></td>   
+                        <td>
+                            <button type='button' class='btn btn-danger' style='float: right;' onclick=" request('<?php echo LISTA.'?action=remove&id='.$id; ?>')">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+
+                            <button type='button' class='btn btn-primary' style='float: right;' onclick=" editItemLista('<?php echo $id; ?>')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+
+
+                        </td>                 
+                    
+                    </tr>   
+                       
+                    <?php 
+
+                        if($item['status'] == 1)                
+                            $soma['ganho'] += 1; 
+                        else    
+                            $soma['aguard'] += 1;
+                    endforeach; ?>              
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="total d-flex justify-content-between">
+    <h2><b>ITENS:</b> <b><?php echo $soma['ganho']; ?></b> ganhos e <b><?php echo $soma['aguard']; ?></b> aguardando 
+    <span style=" margin-left:20px;"><b>TOTAL: <?php echo count($lista); ?></b></span>
+    </h2>
+    <a href="#" class='btn btn-warning' onclick="openModal()"> ADD + </a>
+    <a href="#" style="display:none" id="add" class='btn btn-warning' data-toggle="modal" data-target="#exampleModal"></a>
+</div>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Adicionar item a Lista</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+            <form role="form">
+				<div class="form-group">
+					 
+					<label for="exampleInputEmail1">
+						Nome Item
+					</label>
+					<input type="text" class="form-control" id="item" />
+				</div>
+				<div class="form-group">
+					 
+					<label for="exampleInputPassword1">
+						Link da imagem
+					</label>
+					<input type="text" class="form-control" id="image" />
+				</div>
+
+			</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" id="salvar" class="btn btn-success" onclick="addItemLista()" data-dismiss="modal">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</section>
+
 <div class="menu-lateral">
     <ul>
-        <li class="bg-warning" onclick=" toggleHash()"><a href="#convites">CONVITES</a></li>
-        <li class="bg-info" onclick=" toggleHash()"><a href="#mensagens">MENSAGENS</a></li>
+        <li class="bg-warning" onclick=" toggleHash('#convites')">CONVITES</li>
+        <li class="bg-info" onclick=" toggleHash('#mensagens')">MENSAGENS</li>
+        <li class="bg-danger" onclick=" toggleHash('#lista')">LISTA DE PRESENTES</li>
     </ul>
 </div>
 
@@ -366,6 +497,80 @@ function toggleHash(){
             });
         })
     }
+
+    function openModal(){
+        document.getElementById("item").value = ""
+        document.getElementById("image").value = ""
+        document.getElementById("salvar").setAttribute('onclick','addItemLista()')
+        document.getElementById('add').click();
+    }
+
+     function addItemLista(){
+        let item = document.getElementById("item").value;
+        let image = document.getElementById("image").value;
+
+        obj = {
+            item: item,
+            image: image,
+            status: 0,
+            doador:{
+                nome:"",
+                email:"",
+                telefone:""
+            }
+        }
+        fetch('<?php echo LISTA; ?>?action=new',{
+            method:"POST",
+            body:JSON.stringify(obj)
+        }).then(resp =>{
+            resp.json().then(resp=>{
+                console.log(resp)
+                if(resp.message.message_success == "sucesso")
+                    location.reload();
+            })
+        })
+    }
+
+
+    function editItemLista(id){
+        
+        fetch('<?php echo LISTA; ?>?id='+id).then(resp =>{
+            resp.json().then(resp=>{
+                document.getElementById("item").value = resp.item
+                document.getElementById("image").value = resp.image
+                document.getElementById("salvar").setAttribute('onclick',`enviaEditItemLista(${id})`)
+                document.getElementById('add').click();
+            })        
+        })
+    }
+    function enviaEditItemLista(id){
+        let item = document.getElementById("item").value;
+        let image = document.getElementById("image").value;
+
+        obj = {
+            item: item,
+            image: image,
+        }
+        fetch('<?php echo LISTA; ?>?action=edita&id='+id,{
+            method:"POST",
+            body:JSON.stringify(obj)
+        }).then(resp =>{
+            resp.json().then(resp=>{
+                console.log(resp)
+                if(resp.message.message_success == "sucesso")
+                    location.reload();
+            })
+        } )
+    }
+
+    function removeItemLista(id){
+        fetch('<?php echo LISTA; ?>?action=remove&id='+id).then(resp =>{
+            resp.json().then(resp=>{
+                console.log(resp)
+            })
+        } )
+    }
+    
 
 
 </script>

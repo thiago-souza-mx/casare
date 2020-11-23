@@ -32,7 +32,7 @@ if(isset($_GET['n'])){
    
 <main role="main">
 
-  <section class="jumbotron m-0 text-center">
+  <section class="jumbotron m-0 py-2 text-center">
       
     <div class="container">
       <h1>Nossa Conta</h1>
@@ -43,15 +43,19 @@ if(isset($_GET['n'])){
       </div>
   </section>  
   <div class="album pt-2 pb-5 text-center  m-0">
-    <div class="container">
-      <p class="lead text-muted d-flex justify-content-between px-4">
-        <span>Banco:</span> <b>237 - Next</b> <p>
-      <p class="lead text-muted d-flex justify-content-between px-4">
-        <span>Agência:</span> <b>3925</b> <p>
-      <p class="lead text-muted d-flex justify-content-between px-4">
-        <span>Conta:</span> <b>667001-6</b> <p>
-      <p class="lead text-muted d-flex justify-content-between px-4">
-        <span>Titular:</span> <b>Thais Pereira dos Santos</b> <p>
+    <div class="container" style="max-width:500px;">
+      <p class="lead text-muted d-flex justify-content-between px-4 m-0">
+        <span>Banco:</span> <b>237 - Next</b> </p>
+        <hr>
+      <p class="lead text-muted d-flex justify-content-between px-4 m-0">
+        <span>Agência:</span> <b>3925</b> </p>
+        <hr>
+      <p class="lead text-muted d-flex justify-content-between px-4 m-0">
+        <span>Conta:</span> <b>667001-6</b> </p>
+        <hr>
+      <p class="lead text-muted d-flex justify-content-between px-4 m-0">
+        <span>Titular:</span> <b>Thais Pereira dos Santos</b> </p>
+        <hr>
 
      
       <p>
