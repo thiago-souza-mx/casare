@@ -211,6 +211,11 @@ print_r( $html);
             rd:"0 0 30px 10px",        
         },
         init:()=>{
+
+            setInterval(()=>{
+                Lista.timer();
+                console.log("oi")
+            },1000*10)
             if(window.outerWidth < 500){
                 Lista.divframe.w = "100%"
                 Lista.divframe.h ="100%"
@@ -305,6 +310,29 @@ print_r( $html);
 
             divframe.appendChild(frame)
             document.body.appendChild(divframe)
+
+            let aviso = document.createElement('div')
+            aviso.id = "aviso"
+            aviso.setAttribute('class','over')
+            aviso.setAttribute('style',`
+                position: fixed;
+                bottom: 35px;
+                right: 91px;
+                z-index: 99997;
+                width: 140px;
+                height: 50px;
+                text-align: left;
+                background: #eb3f66;
+                color: #FFF;
+                padding: 5px 15px;
+                border-radius: 15px 0 0 15px;
+                overflow: hidden;
+                transition:0.4s all;
+            `)
+            aviso.innerHTML = `
+                <span>Veja nossa Lista de presentes</span>
+            `
+            document.body.appendChild(aviso)
 
             Lista.setRota()
             Lista.setStyle()
@@ -466,6 +494,10 @@ print_r( $html);
                 #rsvp .decline:hover{
                     color: #ffc985!important;
                 }
+                .over{
+                    width:0!important;
+                    padding:0!important;
+                }
                 @media (max-width:500px){
                     .flex-row{
                         flex-direction: column;
@@ -478,6 +510,16 @@ print_r( $html);
             </style>
             `
             document.head.insertAdjacentHTML('beforeend', style)
+        },
+        timer:()=>{
+            let aviso =  document.getElementById('aviso');
+            if(aviso.getAttribute('class').indexOf('over')>-1){
+                aviso.classList.remove('over');
+            }else{
+                aviso.classList.add('over');
+            }
+           
+
         }
     };
 
