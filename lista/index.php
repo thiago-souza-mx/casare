@@ -112,7 +112,7 @@ $lista = json_decode($lista, true);
                         <?php if($item['status'] == 0){ ?>    
                             <button class="btn btn-primary" onclick="select(<?php echo $id; ?>, '<?php echo $item['item']; ?>')" >Selecionar</button>    
                         <?php }else{
-                            echo "<p class='my-2>'Já escolhido!</p>";
+                            echo "<p class='my-2'>Já escolhido!</p>";
                         } ?> 
                     </div>            
                 </div>
