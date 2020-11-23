@@ -310,6 +310,13 @@ print_r( $html);
             Lista.setStyle()
             Lista.adjustButtons()
 
+            let section = document.getElementById('by_our_side')
+            document.getElementById('by_our_side').remove()
+            document.getElementById('events').insertAdjacentHTML('beforeend', "<div id='insert'></div>");
+            document.getElementById('insert').append(section)
+
+            
+
         },
         open:()=>{
             let btn = Lista.button
