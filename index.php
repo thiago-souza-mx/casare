@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 $root = 'http://casamento.thaisethiago.tk/';
 if(isset($_SERVER["AMBIENTE"]) && $_SERVER["AMBIENTE"] == "PODUCAO")
     $root = 'http://'.$_SERVER['HTTP_HOST'];
@@ -23,8 +23,29 @@ function Request($url){
 }
 
 $name = false;
+$status = false;
 if(isset($_GET['n'])){
     $name = $_GET['n'];
+    $json = Request($root.'/rest/rest.json?'.uniqid());
+    $json = json_decode($json, true);    
+    
+    if(isset($json[$name])){
+        $json[$name]['name'] = $name;
+        $_SESSION['convidado'] = $json[$name];
+        if(!isset($json[$name]['status']) && !isset($_GET['rsvp'])){       
+            header("Location:?rsvp=true#rsvp");
+        }else{
+            if(isset($json[$name]['status'])){
+                if($json[$name]['status'] == "confirmou" ){
+                    $status = true;
+                }
+            }
+        }
+    }
+}
+if(isset($_SESSION['convidado'])){
+    $name = $_SESSION['convidado']['name'];
+    //print_r($_SESSION['convidado']);
 }
 
 $resp = Request('https://www.casare.me/'.$app);
@@ -55,6 +76,11 @@ $html = str_replace('/convites/thaisandrafa/check','/check',$no_phone);
 $html = str_replace('disabled="disabled"','',$html);
 $html = str_replace('method="post"','method="get"',$html);
 
+if($status){
+    echo "<style>#nome, .btn-status{display:none} .btn-status:nth-child(1){display:block;    margin: auto;}</style>";
+    $html = str_replace('olá, convidado,','olá, '.$name.',',$html);
+    $html = str_replace('sua presença é muito importante para nós','sua presença já foi confimada',$html);
+}
 
 
 print_r( $html);
@@ -86,6 +112,7 @@ print_r( $html);
 
 <script>
     function setName(name){
+        
         document.getElementById('nome').value = name;
         document.getElementById('guest_message_name').value = name;
     }
@@ -166,34 +193,41 @@ print_r( $html);
             boxshw:"-3px 4px 8px -5px rgba(0,0,0,0.5)",
             cur:"pointer"
         },
-        iframe:{
-            id:"frame_lista",
-            url:"/lista/?n=<?php echo $name; ?>",
+        divframe:{
+            id:"divframe",
             w:"400px",
-            h:"550px",
+            h:"calc( 100% - 40px )",
             rd:"10px 10px 30px 10px",
-            bg:"#FFF",
             pos:"fixed",
             b:"20px",
             r:"20px",
             zi:"999998",
-            boxshw:"-2px 2px 15px -3px rgba(0,0,0,0.5)",            
+            boxshw:"-2px 2px 15px -3px rgba(0,0,0,0.5)",
+        },
+        iframe:{
+            id:"frame_lista",
+            bg:"#FFF",
+            url:"/lista/?n=<?php echo $name; ?>",
+            w:"100%",
+            h:"100%", 
+            rd:"0 0 30px 10px",        
         },
         init:()=>{
             if(window.outerWidth < 500){
-                Lista.iframe.w = "100%"
-                Lista.iframe.h ="100%"
-                Lista.iframe.rd = "50px"
-                Lista.iframe.b = "30px"
-                Lista.iframe.r = "30px"
+                Lista.divframe.w = "100%"
+                Lista.divframe.h ="100%"
+                Lista.divframe.rd = "50px"
+                Lista.divframe.b = "30px"
+                Lista.divframe.r = "30px"
             }
             let btn = Lista.button
             let frm = Lista.iframe
+            let divfrm = Lista.divframe
             let button = document.createElement('div')
             button.id = btn.id
             button.setAttribute(
-                'style',
-                `background-image:url('${btn.img}');
+                'style',`
+                background-image:url('${btn.img}');
                 background-repeat:no-repeat;
                 background-size:${btn.sz}; 
                 background-color:${btn.bg};
@@ -209,33 +243,71 @@ print_r( $html);
                 cursor:${btn.cur};
                 transition:0.5s all;
                 `
-            ),
+            )
             button.setAttribute('onclick','Lista.open()')
             document.body.appendChild(button)
 
             let frame = document.createElement('iframe')
             frame.id = frm.id
-            frame.setAttribute('frameborder',0)
-            frame.setAttribute('class','hide')
+            frame.setAttribute('frameborder',0)            
             frame.height= frm.h 
-            frame.scrolling="no"
+            //frame.scrolling="no"
             frame.setAttribute(
-                'style',
-                `
+                'style',`
+                width:${frm.w};
+                height:${frm.h};
+                border-radius:${frm.rd};
                 background:${frm.bg};
+            `)
+            
+            let divframe = document.createElement('div')
+            divframe.id = divfrm.id
+            divframe.setAttribute('class','hide')
+            divframe.setAttribute(
+                'style',`                
                 width:0;
                 height:0;
-                border-radius:${frm.rd};
-                position:${frm.pos};
-                bottom:${frm.b};
-                right:${frm.r};
-                z-index:${frm.zi};
-                box-shadow:${frm.boxshw};
+                border-radius:${divfrm.rd};
+                position:${divfrm.pos};
+                bottom:${divfrm.b};
+                overflow: hidden;
+                right:${divfrm.r};
+                z-index:${divfrm.zi};
+                box-shadow:${divfrm.boxshw};
                 display:none;
                 transition:0.4s all;
-                `
-            ),
-            document.body.appendChild(frame)
+            `) 
+            divframe.innerHTML = html = `
+            <div class="app_toolbar" style="
+                background: #FFF;
+                display: flex;
+                align-items: center;
+                padding: 5px 20px;
+            ">
+                <div class="app_title" style="
+                    flex: 1;
+                    text-align: center;
+                ">
+                    Lista de Presentes
+                </div>
+                <ul class="app_buttons" style="
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    padding: 0;
+                    margin: 0;
+                    list-style:none;
+                ">
+                    <li onclick="Lista.maximize(this)" style="
+                        cursor:pointer;
+                    ">🗖</li>
+                </ul>
+            </div>
+            `
+
+            divframe.appendChild(frame)
+            document.body.appendChild(divframe)
+
             Lista.setRota()
             Lista.setStyle()
             Lista.adjustButtons()
@@ -244,33 +316,34 @@ print_r( $html);
         open:()=>{
             let btn = Lista.button
             let frm = Lista.iframe
-            let iframe = document.getElementById(Lista.iframe.id)
-            if(iframe.getAttribute('class').indexOf('hide')>-1){
-                iframe.style.display = "block"
-                iframe.classList.add('show')
-                iframe.classList.remove('hide')
+            let divfrm = Lista.divframe
+            let diviframe = document.getElementById(divfrm.id)
+            if(diviframe.getAttribute('class').indexOf('hide')>-1){
+                diviframe.style.display = "block"
+                diviframe.classList.add('show')
+                diviframe.classList.remove('hide')
                 
                 setTimeout(()=>{
                     if(window.outerWidth < 500){
-                        iframe.style.bottom = 0
-                        iframe.style.right = 0
-                        iframe.style.borderRadius = 0
+                        diviframe.style.bottom = 0
+                        diviframe.style.right = 0
+                        diviframe.style.borderRadius = 0
                     }
-                    iframe.style.width = frm.w
-                    iframe.style.height = frm.h
+                    diviframe.style.width = divfrm.w
+                    diviframe.style.height = divfrm.h
                 },100)
                 Lista.toggleClose('show')
             }else{            
-                iframe.style.width = 0
-                iframe.style.height = 0 
+                diviframe.style.width = 0
+                diviframe.style.height = 0 
                 if(window.outerWidth < 500){
-                    iframe.style.bottom = frm.b
-                    iframe.style.right = frm.r
-                    iframe.style.borderRadius = frm.rd
+                    diviframe.style.bottom = divfrm.b
+                    diviframe.style.right = divfrm.r
+                    diviframe.style.borderRadius = divfrm.rd
                 }
-                iframe.classList.remove('show')           
+                diviframe.classList.remove('show')           
                 setTimeout(()=>{
-                    iframe.classList.add('hide')
+                    diviframe.classList.add('hide')
                 },500) 
                 Lista.toggleClose('hide')
             }        
@@ -329,13 +402,13 @@ print_r( $html);
                                                 <p class="lato-light font-size-17 address">Endereço<strong>&nbsp;&nbsp;⋅&nbsp;&nbsp;</strong>Est. da Baronesa ,&nbsp;13a <br>pq do lago &nbsp;-&nbsp;São Paulo &nbsp;-&nbsp;SP &nbsp;</p>
                                                 <div class="rota-btns text-center pad-top-25 pad-bottom-10">
                                                     <a href="https://maps.app.goo.gl/aL3Z4NFJLG6o9xVG9" target="_blank" class="btn btn-danger">Abra no MAPs</a>
-                                                    <a href="https://waze.com/ul?a=share_drive&locale=pt_BR&sd=4CliIkKx2B-DP&env=row&utm_source=waze_app&utm_campaign=share_drive" target="_blank" class="btn btn-info">Abra no Waze</a>
+                                                    <a href="https://waze.com/ul/h6gy9ptzbk" target="_blank" class="btn btn-info">Abra no Waze</a>
                                                 </div>
 
                                             </div>
 
-                                            <div class="col-md-6 pad-0">
-                                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3653.3599280044477!2d-46.77113208588941!3d-23.698837484614867!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5211568a6e1b%3A0x21c9e7abd2d3d831!2sEliane%20Festas!5e0!3m2!1spt-BR!2sbr!4v1606076788606!5m2!1spt-BR!2sbr" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                                            <div class="col-md-6 pad-0" style="min-height: 300px; width: 100%;">
+                                                <iframe style="min-height: 300px; width: 100%;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3653.3599280044477!2d-46.77113208588941!3d-23.698837484614867!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5211568a6e1b%3A0x21c9e7abd2d3d831!2sEliane%20Festas!5e0!3m2!1spt-BR!2sbr!4v1606076788606!5m2!1spt-BR!2sbr" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
                                             </div>
                                         </div>
                                     </div>
@@ -354,9 +427,22 @@ print_r( $html);
             btns.classList.add('d-flex','flex-row')
             btns = btns.childNodes
             btns.forEach(item=>{
-                item.classList.add('mx-10')
+                item.classList.add('mx-10','btn-status')
             })
 
+        },
+        maximize: e =>{
+            let divfrm = Lista.divframe
+            let diviframe = document.getElementById(divfrm.id)
+            if(diviframe.getAttribute('class').indexOf('full')>-1){
+                diviframe.classList.remove('full')
+                diviframe.style.width = divfrm.w
+                e.innerText = "🗖"
+            }else{
+                diviframe.classList.add('full')
+                diviframe.style.width = "calc( 100% - 40px )"
+                e.innerText = "🗕"
+            }
         },
         setStyle:()=>{
             let style=`

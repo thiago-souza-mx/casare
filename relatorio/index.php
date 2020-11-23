@@ -205,8 +205,8 @@ function toggleHash(){
                             <b><?php echo empty($adult.$child) ? 'N/A' : $adult.' '.$child; ?> </b>
                         </td>
                         <td style="display:flex; flex-direction:row; justify-content:center;">
-                            <input type="text" value="http://casamento.thaisethiago.tk/?n=<?php echo urlencode($k); ?>#rsvp">
-                            <a class='' target="_blank" href="https://api.whatsapp.com/send?phone=&text=<?php echo urlencode("http://casamento.thaisethiago.tk/?n=".str_replace(" ","+",trim($k))."#rsvp"); ?>">
+                            <input type="text" value="http://casamento.thaisethiago.tk/?n=<?php echo urlencode($k); ?>">
+                            <a class='' target="_blank" href="https://api.whatsapp.com/send?phone=&text=<?php echo urlencode("http://casamento.thaisethiago.tk/?n=".str_replace(" ","+",trim($k))); ?>">
                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 39 39" width="39" height="39" style="enable-background:new 0 0 39 39;" xml:space="preserve">
                                     <style type="text/css">
                                         .st0{fill:#00E676;}
