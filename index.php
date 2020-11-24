@@ -128,71 +128,8 @@ echo $html;
 </style>
 
 <script>
-    function setName(name){
-        
-        document.getElementById('nome').value = name;
-        document.getElementById('guest_message_name').value = name;
-    }
 
-    function setMessages( object ){
-        if(!object)
-            return ;
-        
-        object = JSON.parse(object);
-        let arrayMsg = "";
-        let divider = `
-            <div class="col-xs-12 col-md-4 col-md-offset-4 text-center" style="float:none;"><img alt="About section footer" class="about-footer img-responsive center-block" data-retina="https://assets3.casare.me/assets/wedding/classic/champagne_blue/about-section-footer@2x-d4480dfa294c40ac3b05367b031f3b08.png" src="https://assets3.casare.me/assets/wedding/classic/champagne_blue/about-section-footer-293437c969d731ccbc631b73ce5c4c80.png"></div>
-        `;
-        let n = 0;
-        object.forEach(list=>{
-            if(!!list.status){
-                arrayMsg += `
-                    <div class="message-item">
-                        <div class="row">
-                            <div class="col-xs-10 col-xs-offset-1 text-center">
-                                <p class="lato-light-italic" data-anchor="guest-messages-section" data-behavior="view_more" data-button-class="text-center center-block text-lg pathway-font uppercase" data-max-height="120" style="height: auto; overflow: visible;">
-                                ${list.msg}
-                                </p>
-                                <h3>${list.name}</h3><span class="lato-light">${list.date}</span></div>
-                        </div>
-                    </div>                
-                `;
-                n++;
-
-                if(n < object.length)
-                    arrayMsg += divider
-            }
-        })
-
-        let html =`
-        <div class="row">
-            <div class="col-md-12">
-                <div class="guest-message-container">
-                    <div class="guest-message-list">
-
-                        ${arrayMsg}
-
-                    </div>
-                </div>
-        
-            </div>
-        </div>
-        `;
-
-        let container = document.createElement('div');
-        container.setAttribute('class','row');
-        container.innerHTML = html;
-        if(!!n)
-        document.getElementById('guest-messages').querySelector('.container').appendChild(container);
-    };
-
-    setMessages('<?php echo Request($root.'/guest_messages/messages.json'); ?>');
-
-    <?php if($name){
-        echo "setName('{$name}');";
-    } ?>
-
-    const Lista = {
+const Lista = {
         delay:200,
         button:{
             id:"lista_de_presentes",
@@ -558,5 +495,74 @@ echo $html;
             removeSlick()
         })
     })
+
+    function setName(name){
+        
+        document.getElementById('nome').value = name;
+        document.getElementById('guest_message_name').value = name;
+    }
+
+    function setMessages( object ){
+        if(!object)
+            return ;
+
+        console.log(object);
+        
+       // object = JSON.parse(object);
+        let arrayMsg = "";
+        let divider = `
+            <div class="col-xs-12 col-md-4 col-md-offset-4 text-center" style="float:none;"><img alt="About section footer" class="about-footer img-responsive center-block" data-retina="https://assets3.casare.me/assets/wedding/classic/champagne_blue/about-section-footer@2x-d4480dfa294c40ac3b05367b031f3b08.png" src="https://assets3.casare.me/assets/wedding/classic/champagne_blue/about-section-footer-293437c969d731ccbc631b73ce5c4c80.png"></div>
+        `;
+        let n = 0;
+        object.forEach(list=>{
+            //list = object[list];
+            if(!!list.status){
+                arrayMsg += `
+                    <div class="message-item">
+                        <div class="row">
+                            <div class="col-xs-10 col-xs-offset-1 text-center">
+                                <p class="lato-light-italic" data-anchor="guest-messages-section" data-behavior="view_more" data-button-class="text-center center-block text-lg pathway-font uppercase" data-max-height="120" style="height: auto; overflow: visible;">
+                                ${list.msg}
+                                </p>
+                                <h3>${list.name}</h3><span class="lato-light">${list.date}</span></div>
+                        </div>
+                    </div>                
+                `;
+                n++;
+
+                if(n < object.length)
+                    arrayMsg += divider
+            }
+        })
+
+        let html =`
+        <div class="row">
+            <div class="col-md-12">
+                <div class="guest-message-container">
+                    <div class="guest-message-list">
+
+                        ${arrayMsg}
+
+                    </div>
+                </div>
+        
+            </div>
+        </div>
+        `;
+
+        let container = document.createElement('div');
+        container.setAttribute('class','row');
+        container.innerHTML = html;
+        if(!!n)
+        document.getElementById('guest-messages').querySelector('.container').appendChild(container);
+    };
+
+    setMessages(<?php echo Request($root.'/guest_messages/messages.json'); ?>);
+
+    <?php if($name){
+        echo "setName('{$name}');";
+    } ?>
+
+    
 
 </script>
