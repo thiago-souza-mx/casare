@@ -48,8 +48,11 @@ if(isset($_GET['n'])){
     }
 }
 if(isset($_COOKIE['convidado'])){
-    $name = json_decode( $_COOKIE['convidado'], true )['name'];
-    //print_r($_SESSION['convidado']);
+    $convidado = json_decode( $_COOKIE['convidado'], true );
+    $name = $convidado['name'];
+    if($convidado['status'])
+        $status = $convidado['status'];
+   // print_r($convidado);
 }
 
 $resp = Request('https://www.casare.me/'.$app);
@@ -80,14 +83,24 @@ $html = str_replace('/convites/thaisandrafa/check','/check',$no_phone);
 $html = str_replace('disabled="disabled"','',$html);
 $html = str_replace('method="post"','method="get"',$html);
 
-if($status){
-    echo "<style>#nome, .btn-status{display:none} .btn-status:nth-child(1){display:block;    margin: auto;}</style>";
+if($status == "confirmou"){
+    $style = "
+    <style>
+        #nome, .btn-status{
+            display:none
+        } 
+        .btn-status:nth-child(1){
+            display:block;   
+            margin: auto;
+        }
+    </style>";
+    $html = str_replace('</head>', $style.'</head>',$html);
     $html = str_replace('olá, convidado,','olá, '.$name.',',$html);
     $html = str_replace('sua presença é muito importante para nós','sua presença já foi confimada.<br> Caso queira cancelar é só clicar em não vou abaixo.',$html);
 }
 
 
-print_r( $html);
+echo $html;
 
 ?>
 <style>

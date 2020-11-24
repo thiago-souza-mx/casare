@@ -68,6 +68,15 @@ $lista = json_decode($lista, true);
       .disabled .img-produto{
           filter: grayscale(1);
       }
+      .checado{
+          background-image: url('/images/checked.jpg');
+          background-size:cover;
+          background-repeat:no-repeat;
+          background-position:center;
+          width:50px;
+          height:50px;
+          border-radius:100%;
+      }
     </style>
     <!-- Custom styles for this template -->
 
@@ -99,7 +108,7 @@ $lista = json_decode($lista, true);
         <!-- Card -->
         <?php foreach($lista as $id => $item): ?>
         <div class="col-md-4">
-            <div id="card_<?php echo $id; ?>" class="card mb-4 shadow-sm rounded-lg <?php echo $item['status']>0 ? "disabled" : "" ; ?>">
+            <div id="card_<?php echo $id; ?>"  data-name-item="<?php echo $item['item']; ?>" class="card mb-4 shadow-sm rounded-lg <?php echo $item['status']>0 ? "disabled" : "" ; ?>">
                 <div class="img-produto rounded-top" style="background-image:url('<?php echo $item['image']; ?>');" >
                 </div>
                 <div class="card-body">
@@ -108,7 +117,7 @@ $lista = json_decode($lista, true);
                     </p>
                     <div class="dropdown-divider"></div>
 
-                    <div class="d-flex justify-content-center align-items-center">  
+                    <div class="d-flex justify-content-center align-items-center selecionar">  
                         <?php if($item['status'] == 0){ ?>    
                             <button class="btn btn-primary" onclick="select(<?php echo $id; ?>, '<?php echo $item['item']; ?>')" >Selecionar</button>    
                         <?php }else{
@@ -196,13 +205,22 @@ $lista = json_decode($lista, true);
             res.json().then(resp =>{
                 console.log(resp)
                 if(resp.message.message_success == "sucesso")
-                    adiciona(id)
+                    adiciona(id , obj.doador.nome)
             })
         })
     }
 
-    function adiciona(id){
-        alert("card_"+id)
+    function adiciona(id , nome){
+        let escolha = document.getElementById("card_"+id)
+        escolha.classList.add('disabled')
+        escolha.querySelector('.selecionar').innerHTML = `
+            <p class='my-2'>
+                Selecionado por ${nome}
+            </p>
+            <div class="checado">
+            
+            </div>
+        `        
     }
 </script>
 </body>
